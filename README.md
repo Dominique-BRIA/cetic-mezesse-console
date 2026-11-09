@@ -19,7 +19,7 @@ La console n'affiche que de la technique : jamais les notes ni les élèves.
 ## Sécurité
 
 - Comptes à part (table `AdminConsole`), hors des comptes de l'école : un jeton de console n'ouvre aucune route de l'école, et l'inverse non plus.
-- Double authentification obligatoire ; cinq échecs verrouillent le compte un quart d'heure.
+- Connexion par e-mail et mot de passe ; cinq échecs verrouillent le compte un quart d'heure.
 - Session de 8 heures, gardée dans l'onglet (`sessionStorage`) : fermer l'onglet déconnecte.
 
 ## Mise en service
@@ -28,9 +28,6 @@ La console n'affiche que de la technique : jamais les notes ni les élèves.
    - `CONSOLE_ADMIN_EMAIL` et `CONSOLE_ADMIN_MOT_DE_PASSE` : le premier compte, créé au démarrage si aucun n'existe ;
    - `CORS_ORIGINS` : y ajouter l'adresse de la console.
 2. **Vercel** : importer ce dépôt, avec la variable `NEXT_PUBLIC_API_URL` (adresse de l'API, terminée par `/api`).
-3. **Première connexion** : e-mail et mot de passe, code laissé vide. La console affiche un QR code à scanner avec une application d'authentification (Google Authenticator, Aegis…), puis demande le premier code.
-
-Si le téléphone d'authentification est perdu : remettre `totpActif` à `false` et `totpSecret` à vide pour ce compte dans la base, puis se reconnecter pour scanner un nouveau code.
 
 ## Lancer en local
 

@@ -7,9 +7,8 @@ export interface Moi {
 }
 
 export interface ReponseConnexion {
-  jeton: string | null;
-  admin: Moi | null;
-  enrolement: { secret: string; uri: string } | null;
+  jeton: string;
+  admin: Moi;
 }
 
 export interface Politique {
