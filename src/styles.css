@@ -1,0 +1,104 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Mêmes jetons que le site de l'école (cetic-mezesse-web), sur un fond neutre : on sait où l'on est. */
+:root {
+  --fond: 238 241 245;
+  --surface: 255 255 255;
+  --surface-2: 244 246 249;
+  --bord: 214 221 230;
+  --encre: 20 32 46;
+  --encre-2: 78 93 112;
+  --encre-3: 112 127 145;
+  --primaire: 29 95 168;
+  --primaire-fonce: 21 74 133;
+  --primaire-pale: 228 239 250;
+  --succes: 30 118 76;
+  --danger: 179 38 30;
+  --alerte: 154 90 0;
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --fond: 14 20 28;
+    --surface: 22 30 41;
+    --surface-2: 28 38 51;
+    --bord: 44 57 74;
+    --encre: 226 234 243;
+    --encre-2: 160 177 196;
+    --encre-3: 124 141 161;
+    --primaire: 106 168 234;
+    --primaire-fonce: 140 189 240;
+    --primaire-pale: 28 50 76;
+    --succes: 92 196 140;
+    --danger: 240 120 110;
+    --alerte: 230 170 80;
+    color-scheme: dark;
+  }
+}
+
+html,
+body {
+  background: rgb(var(--fond));
+  color: rgb(var(--encre));
+}
+
+body {
+  font-family: 'Public Sans', system-ui, sans-serif;
+  font-feature-settings: 'tnum' 1;
+  -webkit-font-smoothing: antialiased;
+}
+
+@layer components {
+  .champ {
+    @apply block w-full rounded border border-bord bg-surface px-3 py-2 text-sm text-encre outline-none transition-colors placeholder:text-encre-3 focus:border-primaire focus:ring-2 focus:ring-primaire/20 disabled:bg-surface-2 disabled:text-encre-2;
+  }
+  .etiquette {
+    @apply mb-1 block text-xs font-semibold uppercase tracking-wide text-encre-2;
+  }
+  .bouton {
+    @apply inline-flex items-center justify-center gap-2 whitespace-nowrap rounded px-3.5 py-2 text-sm font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-50;
+  }
+  .bouton-primaire {
+    @apply bouton bg-primaire text-white hover:bg-primaire-fonce dark:text-[rgb(12_24_38)];
+  }
+  .bouton-secondaire {
+    @apply bouton border border-bord bg-surface text-encre hover:bg-surface-2;
+  }
+  .bouton-discret {
+    @apply bouton px-2 text-encre-2 hover:bg-surface-2 hover:text-encre;
+  }
+  .tableau {
+    @apply w-full border-collapse text-sm;
+  }
+  .tableau th {
+    @apply whitespace-nowrap border-b border-bord bg-surface-2 px-3 py-2 text-left text-xs font-semibold uppercase tracking-wide text-encre-2;
+  }
+  .tableau td {
+    @apply border-b border-bord/70 px-3 py-2 align-middle;
+  }
+  .tableau tbody tr:hover td {
+    @apply bg-primaire-pale/40;
+  }
+  .lien {
+    @apply font-medium text-primaire underline-offset-2 hover:underline;
+  }
+}
+
+.squelette {
+  border-radius: 4px;
+  background: rgb(var(--bord) / 0.7);
+  animation: squelette 1.4s ease-in-out infinite;
+}
+@keyframes squelette {
+  50% {
+    opacity: 0.45;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .squelette {
+    animation: none;
+  }
+}

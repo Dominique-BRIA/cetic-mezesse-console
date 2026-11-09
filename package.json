@@ -1,0 +1,31 @@
+{
+  "name": "cetic-console",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "next dev --port 5180",
+    "build": "next build",
+    "start": "next start --port 5180",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@fontsource/public-sans": "5.3.0",
+    "@tanstack/react-query": "5.104.3",
+    "clsx": "2.1.1",
+    "lucide-react": "1.57.0",
+    "next": "16.4.2",
+    "qrcode-generator": "1.4.4",
+    "react": "19.3.1",
+    "react-dom": "19.3.1"
+  },
+  "devDependencies": {
+    "@types/node": "22.15.0",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "autoprefixer": "10.6.1",
+    "postcss": "8.5.26",
+    "tailwindcss": "3.4.19",
+    "typescript": "5.9.3"
+  }
+}
