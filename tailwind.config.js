@@ -2,10 +2,9 @@
 const v = (nom) => `rgb(var(--${nom}) / <alpha-value>)`;
 export default {
   content: ['./src/**/*.{ts,tsx}'],
-  darkMode: 'media',
   theme: {
     extend: {
-      fontFamily: { sans: ['"Public Sans"', 'system-ui', 'sans-serif'] },
+      fontFamily: { sans: ['var(--police)', 'system-ui', 'sans-serif'] },
       colors: {
         fond: v('fond'),
         surface: v('surface'),
@@ -17,11 +16,13 @@ export default {
         primaire: v('primaire'),
         'primaire-fonce': v('primaire-fonce'),
         'primaire-pale': v('primaire-pale'),
+        bouton: v('bouton'),
+        'bouton-fonce': v('bouton-fonce'),
         succes: v('succes'),
         danger: v('danger'),
         alerte: v('alerte'),
       },
-      borderRadius: { DEFAULT: '6px', md: '6px', lg: '8px' },
+      borderRadius: { sm: '0.375rem', DEFAULT: '0.5rem', md: '0.5rem', lg: '0.625rem', xl: '0.875rem', '2xl': '1rem' },
     },
   },
   plugins: [],

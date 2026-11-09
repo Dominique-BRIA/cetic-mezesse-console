@@ -35,6 +35,35 @@ export interface Apercu {
   politique: Politique;
 }
 
+export interface JourAnalytique {
+  jour: string;
+  actifs: number;
+  nouveaux: number;
+  parVersion: Record<string, number>;
+  plantages: Record<string, number>;
+}
+
+export interface Cumul {
+  actifs: number;
+  nouveaux: number;
+  plantages: number;
+}
+
+export interface Part {
+  libelle: string;
+  valeur: number;
+}
+
+export interface Analytique {
+  jours: number;
+  periode: Cumul;
+  precedente: Cumul;
+  serie: JourAnalytique[];
+  modeles: Part[];
+  versionsAndroid: Part[];
+  roles: { role: string; equipes: number; sansAppareil: number }[];
+}
+
 export interface LigneAppareil {
   installationId: string;
   compte: string | null;

@@ -2,13 +2,14 @@
 
 Le poste de pilotage du développeur, séparé de l'application de l'école : quels téléphones ont quelle version, ce qui plante, et comment arrêter une mise à jour défectueuse.
 
-Next.js 16 (App Router), React 19, TanStack Query, Tailwind CSS. Les routes sont dans l'API [cetic-mezesse-backend](https://github.com/Dominique-BRIA/cetic-mezesse-backend) (`/api/console/...`) : aucun serveur de plus à héberger.
+Next.js 16 (App Router), React 19, TanStack Query, Recharts, Tailwind CSS. Les routes sont dans l'API [cetic-mezesse-backend](https://github.com/Dominique-BRIA/cetic-mezesse-backend) (`/api/console/...`) : aucun serveur de plus à héberger.
 
 ## Pages
 
 | Page | Contenu |
 |---|---|
-| Aperçu | Appareils, comptes sans appareil, plantages, répartition des versions |
+| Aperçu | Chiffres clés, téléphones actifs par jour, versions installées, plantages par jour, comptes équipés par rôle |
+| Analytique | Adoption de la dernière version, nouveaux appareils, modèles, versions d'Android, taille des APK |
 | Appareils | Chaque téléphone : compte, version, correctif, modèle, dernière activité. Comptes dont aucun téléphone ne s'est signalé |
 | Plantages | Erreurs regroupées par origine, pile d'appels, téléphones touchés, marquage « résolu ». Conservées 90 jours |
 | Mises à jour | Suspendre toutes les mises à jour, bloquer une version, fixer la version minimale, sans rien publier |

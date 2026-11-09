@@ -1,20 +1,21 @@
 import { useEffect, type ReactNode } from 'react';
+import Link from 'next/link';
 import clsx from 'clsx';
 import { useIsFetching, useQueryClient } from '@tanstack/react-query';
-import { AlertCircle, RefreshCw } from 'lucide-react';
+import { AlertCircle, RefreshCw, type LucideIcon } from 'lucide-react';
 
 export function Page({ titre, description, actions, children }: { titre: string; description?: ReactNode; actions?: ReactNode; children: ReactNode }) {
   useEffect(() => {
     document.title = `${titre} · Console CETIC`;
   }, [titre]);
   return (
-    <div className="space-y-5">
-      <header className="flex flex-wrap items-end justify-between gap-3 border-b border-bord pb-4">
+    <div className="space-y-6">
+      <header className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
         <div className="min-w-0">
-          <h1 className="text-[1.4rem] font-bold leading-tight tracking-tight text-encre">{titre}</h1>
+          <h1 className="text-2xl font-bold tracking-tight text-encre">{titre}</h1>
           {description && <p className="mt-1 max-w-3xl text-sm text-encre-2">{description}</p>}
         </div>
-        <div className="flex flex-wrap items-center gap-2">
+        <div className="flex flex-wrap items-center gap-3">
           {actions}
           <Actualiser />
         </div>
@@ -28,34 +29,71 @@ function Actualiser() {
   const client = useQueryClient();
   const enCours = useIsFetching() > 0;
   return (
-    <button type="button" className="bouton-secondaire" onClick={() => client.refetchQueries({ type: 'active' })} disabled={enCours} title="Recharger les données">
+    <button type="button" className="bouton-secondaire w-10 px-0" onClick={() => client.refetchQueries({ type: 'active' })} disabled={enCours} title="Recharger les données" aria-label="Recharger les données">
       <RefreshCw className={clsx('h-4 w-4', enCours && 'animate-spin')} />
-      <span className="hidden sm:inline">Actualiser</span>
     </button>
   );
 }
 
 export function Carte({ titre, actions, children, sansMarge }: { titre?: ReactNode; actions?: ReactNode; children: ReactNode; sansMarge?: boolean }) {
   return (
-    <section className="rounded-lg border border-bord bg-surface">
+    <section className="h-full rounded-xl bg-surface shadow-sm">
       {titre && (
-        <div className="flex flex-wrap items-center justify-between gap-2 border-b border-bord px-4 py-3">
-          <h2 className="text-sm font-bold text-encre">{titre}</h2>
+        <div className="flex flex-wrap items-center justify-between gap-2 px-6 pb-2 pt-5">
+          <h2 className="text-base font-semibold text-encre">{titre}</h2>
           {actions}
         </div>
       )}
-      <div className={sansMarge ? '' : 'p-4'}>{children}</div>
+      <div className={sansMarge ? 'pt-2' : clsx('px-6 pb-6', titre ? 'pt-2' : 'pt-6')}>{children}</div>
     </section>
   );
 }
 
-export function Indicateur({ libelle, valeur, detail }: { libelle: string; valeur: ReactNode; detail?: ReactNode }) {
-  return (
-    <div className="rounded-lg border border-bord bg-surface p-4">
-      <div className="text-xs font-semibold uppercase tracking-wide text-encre-2">{libelle}</div>
-      <div className="mt-1 text-[1.7rem] font-bold leading-tight text-encre">{valeur}</div>
-      {detail && <div className="mt-0.5 text-xs text-encre-2">{detail}</div>}
+interface PropsIndicateur {
+  libelle: string;
+  valeur: ReactNode;
+  detail?: ReactNode;
+  icone?: LucideIcon;
+  /** Couleur de la pastille de l'icône, en hexadécimal. */
+  teinte?: string;
+  href?: string;
+  /** Évolution en pourcentage ; « bon » dit si le sens de la variation est une bonne nouvelle. */
+  tendance?: { pourcentage: number; bon: boolean };
+}
+
+export function Indicateur({ libelle, valeur, detail, icone: Icone, teinte = '#6366f1', href, tendance }: PropsIndicateur) {
+  const contenu = (
+    <div className="flex items-center justify-between gap-3">
+      <div className="min-w-0 space-y-1">
+        <p className="text-sm font-medium text-encre-2">{libelle}</p>
+        <p className="text-3xl font-bold tracking-tight text-encre">{valeur}</p>
+        {detail && <p className="text-xs text-encre-2">{detail}</p>}
+        {tendance && (
+          <p className={clsx('text-xs font-medium', tendance.pourcentage === 0 ? 'text-encre-2' : tendance.bon ? 'text-succes' : 'text-danger')}>
+            {tendance.pourcentage === 0 ? (
+              'Stable sur la période précédente'
+            ) : (
+              <>
+                {tendance.pourcentage > 0 ? '↗' : '↘'} {Math.abs(tendance.pourcentage)} % <span className="font-normal text-encre-2">sur la période précédente</span>
+              </>
+            )}
+          </p>
+        )}
+      </div>
+      {Icone && (
+        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl" style={{ backgroundColor: `${teinte}1a` }}>
+          <Icone className="h-6 w-6" style={{ color: teinte }} />
+        </div>
+      )}
     </div>
+  );
+  const classes = 'block rounded-xl bg-surface p-5 shadow-sm transition-all duration-200';
+  return href ? (
+    <Link href={href} className={clsx(classes, 'hover:-translate-y-0.5 hover:shadow-md')}>
+      {contenu}
+    </Link>
+  ) : (
+    <div className={classes}>{contenu}</div>
   );
 }
 
@@ -72,7 +110,7 @@ export function Chargement({ lignes = 5 }: { lignes?: number }) {
 export function Erreur({ erreur }: { erreur: unknown }) {
   const message = erreur instanceof Error ? erreur.message : 'Une erreur est survenue.';
   return (
-    <div className="flex items-start gap-2 rounded border border-danger/30 bg-danger/5 px-3 py-2.5 text-sm text-danger" role="alert">
+    <div className="flex items-start gap-2 rounded-lg border border-danger/30 bg-danger/5 px-3 py-2.5 text-sm text-danger" role="alert">
       <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" />
       <span className="whitespace-pre-line">{message}</span>
     </div>
