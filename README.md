@@ -25,7 +25,7 @@ La console n'affiche que de la technique : jamais les notes ni les élèves.
 ## Mise en service
 
 1. **API** : déployer la version qui contient la migration V7, avec ces réglages Azure :
-   - `CONSOLE_ADMIN_EMAIL` et `CONSOLE_ADMIN_MOT_DE_PASSE` (12 caractères au moins) : le premier compte, créé au démarrage si aucun n'existe ;
+   - `CONSOLE_ADMIN_EMAIL` et `CONSOLE_ADMIN_MOT_DE_PASSE` : le premier compte, créé au démarrage si aucun n'existe ;
    - `CORS_ORIGINS` : y ajouter l'adresse de la console.
 2. **Vercel** : importer ce dépôt, avec la variable `NEXT_PUBLIC_API_URL` (adresse de l'API, terminée par `/api`).
 3. **Première connexion** : e-mail et mot de passe, code laissé vide. La console affiche un QR code à scanner avec une application d'authentification (Google Authenticator, Aegis…), puis demande le premier code.
