@@ -75,6 +75,8 @@ export interface LigneAppareil {
   versionAndroid: string | null;
   premiereVue: string;
   derniereVue: string;
+  /** Le téléphone a envoyé son jeton : il peut recevoir les notifications push. */
+  push: boolean;
 }
 
 export interface CompteSansAppareil {

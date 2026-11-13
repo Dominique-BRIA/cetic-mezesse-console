@@ -1,8 +1,8 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { CheckCircle2, Clock } from 'lucide-react';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { BellRing, CheckCircle2, Clock, Loader2 } from 'lucide-react';
 import { api } from '../lib/api';
 import { dateHeure, ilYa, libelleRole, pluriel } from '../lib/format';
 import { usePublications } from '../lib/publications';
@@ -14,6 +14,14 @@ export default function Appareils() {
   const derniere = usePublications().data?.[0];
   const [recherche, setRecherche] = useState('');
   const [version, setVersion] = useState('');
+  const [essai, setEssai] = useState<{ ok: boolean; texte: string } | null>(null);
+  // Notification d'essai à un seul téléphone : vérifie Firebase, le jeton et l'affichage sur l'appareil.
+  const envoi = useMutation({
+    mutationFn: (installationId: string) => api<{ message: string }>(`/console/appareils/${encodeURIComponent(installationId)}/push-essai`, { methode: 'POST' }),
+    onMutate: () => setEssai(null),
+    onSuccess: (r) => setEssai({ ok: true, texte: r.message }),
+    onError: (e) => setEssai({ ok: false, texte: e instanceof Error ? e.message : 'Envoi impossible.' }),
+  });
 
   const versions = useMemo(() => [...new Set((q.data?.appareils ?? []).map((a) => a.nomVersion))], [q.data]);
   const lignes = useMemo(() => {
@@ -24,6 +32,14 @@ export default function Appareils() {
   return (
     <Page titre="Appareils" description="Chaque téléphone qui a ouvert l'application : sa version, son dernier compte et sa dernière activité.">
       {q.isError && <Erreur erreur={q.error} />}
+      {essai && (essai.ok ? (
+        <div className="flex items-center gap-2 rounded-lg border border-succes/30 bg-succes/10 px-3 py-2.5 text-sm text-succes" role="status">
+          <CheckCircle2 className="h-4 w-4 shrink-0" />
+          {essai.texte} Vérifiez qu'elle s'affiche sur le téléphone.
+        </div>
+      ) : (
+        <Erreur erreur={new Error(essai.texte)} />
+      ))}
       <Carte
         titre={q.data ? pluriel(lignes.length, 'appareil') : 'Appareils'}
         sansMarge
@@ -52,6 +68,7 @@ export default function Appareils() {
                 <th>Modèle</th>
                 <th>Android</th>
                 <th>Dernière activité</th>
+                <th>Notifications</th>
               </tr>
             </thead>
             <tbody>
@@ -80,6 +97,24 @@ export default function Appareils() {
                   <td className="text-encre-2">{a.versionAndroid ?? '—'}</td>
                   <td className="whitespace-nowrap text-encre-2" title={dateHeure(a.derniereVue)}>
                     {ilYa(a.derniereVue)}
+                  </td>
+                  <td className="whitespace-nowrap">
+                    {a.push ? (
+                      <button
+                        type="button"
+                        className="bouton-secondaire h-8 px-2.5 text-xs"
+                        disabled={envoi.isPending}
+                        onClick={() => envoi.mutate(a.installationId)}
+                        title="Envoyer une notification d'essai à ce seul téléphone"
+                      >
+                        {envoi.isPending && envoi.variables === a.installationId ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <BellRing className="h-3.5 w-3.5" />}
+                        Essai
+                      </button>
+                    ) : (
+                      <span className="text-xs text-encre-3" title="Version 1.1.6 ou plus, ouverte avec un compte connecté">
+                        —
+                      </span>
+                    )}
                   </td>
                 </tr>
               ))}
